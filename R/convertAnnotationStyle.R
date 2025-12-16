@@ -479,7 +479,7 @@ convertAnnotation <- function(x,
 .formatMass <- function(mass, digits = 6) {
     # Format with sign
     if (mass >= 0) {
-        paste0("+ ", round(mass, digits))
+        paste0("+", round(mass, digits))
     } else {
         round(mass, digits)
     }
