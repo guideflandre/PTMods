@@ -1,3 +1,6 @@
+utils::globalVariables("aminoacids")
+
+
 #' Calculate mass for a given aminoacid sequence
 #'
 #' @param x character, sequence
@@ -5,7 +8,6 @@
 #' @return list of numeric (mass values)
 #' @noRd
 .aamass <- function(x, type=c("MonoMass", "AvgMass")) {
-    utils::globalVariables("aminoacids")
     m <- aminoacids[, match.arg(type)]
     names(m) <- aminoacids$OneLetter
     vapply(.string2character(x), function(xx)sum(m[xx]), NA_real_)
@@ -23,7 +25,6 @@
 #' @return numeric (mass values)
 #' @noRd
 .unimodMass <- function(x, id, type=c("MonoMass", "AvgMass"), msg=TRUE) {
-    utils::globalVariables("modifications")
     stopifnot(is.character(x) && is.character(id) && length(id) == 1L)
     stopifnot(id %in% modifications$Id)
     type <- match.arg(type)
@@ -86,7 +87,6 @@
 #' @return character (sequence)
 #' @noRd
 .unimodSequence <- function(x, id) {
-    utils::globalVariables("modifications")
     stopifnot(is.character(x) && is.character(id) && length(id) == 1L)
     stopifnot(id %in% modifications$Id)
     switch(id,
@@ -131,7 +131,6 @@
 .mass <- function(x, type=c("MonoMass", "AvgMass"),
                   fixedModifications=NULL,
                   variableModifications=NULL) {
-    utils::globalVariables("modifications")
     type <- match.arg(type)
 
     if (is.character(fixedModifications)) {

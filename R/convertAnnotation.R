@@ -1,3 +1,5 @@
+utils::globalVariables("modifications")
+
 #' @name convertAnnotation
 #'
 #' @aliases convertAnnotation .convertAnnotation
@@ -93,9 +95,6 @@ convertAnnotation <- function(x,
 .convertAnnotation <- function(x,
                               convertToStyle = c("deltaMass", "unimodId", "name"),
                               massTolerance = 0.01) {
-
-    utils::globalVariables("modifications")
-
     if (!is.character(x) || length(x) != 1L) {
         stop("x must be a single character string")
     }
