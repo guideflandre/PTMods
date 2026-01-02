@@ -41,9 +41,8 @@
 #' @references
 #' Source and more details: \url{http://www.unimod.org/unimod_help.html}
 #'
-#' @name unimod-package
-#' @author Sebastian Gibb \email{mail@@sebastiangibb.de}
-#' @references \url{https://github.com/ComputationalProteomicsUnit/unimod/}
+#' @name PTMods-package
+#' @references \url{https://github.com/RforMassSpectrometry/unimod/}
 #' @keywords package
 #'
 #' @importFrom utils packageVersion
