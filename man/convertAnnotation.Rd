@@ -3,24 +3,22 @@
 \name{convertAnnotation}
 \alias{convertAnnotation}
 \alias{.convertAnnotation}
-\alias{convertStyle}
-\alias{unimodStyle}
 \title{Convert sequences from one annotation style to another}
 \usage{
 convertAnnotation(
   x,
-  convert_to = c("delta_mass", "unimod_id", "name"),
-  mass_tolerance = 0.01
+  convertToStyle = c("deltaMass", "unimodId", "name"),
+  massTolerance = 0.01
 )
 }
 \arguments{
 \item{x}{Character vector with peptide sequences in ProForma format}
 
-\item{convert_to}{Character string specifying target format. Options:
-"delta_mass", "unimod_id", "name"}
+\item{convertToStyle}{Character string specifying target format. Options:
+"deltaMass", "unimodId", "name"}
 
-\item{mass_tolerance}{Numeric mass tolerance in Daltons for matching 
-modifications (default: 0.01). Used when converting from delta_mass.}
+\item{massTolerance}{Numeric mass tolerance in Daltons for matching 
+modifications (default: 0.01). Used when converting from deltaMass.}
 }
 \value{
 Character vector with the sequences in the target annotation format
@@ -28,49 +26,50 @@ Character vector with the sequences in the target annotation format
 \description{
 Converts modifications between different annotation formats for multiple 
 sequences at once. See the details and examples sections for more information.
-The annotation styles are inferred from the `modifications` dataframe.
+The annotation styles are inferred from the `modifications` dataframe (see 
+`?modifications`).
 }
 \details{
 The function handles three main conversion scenarios:
 \itemize{
-  \item Name to delta_mass: "M[Oxidation]PEPTIDE" -> "M[+15.994915]PEPTIDE"
-  \item Name to unimod_id: "M[Oxidation]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
+  \item Name to deltaMass: "M[Oxidation]PEPTIDE" -> "M[+15.994915]PEPTIDE"
+  \item Name to unimodId: "M[Oxidation]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
   \item Delta_mass to name: "M[+15.995]PEPTIDE" -> "M[Oxidation]PEPTIDE"
-  \item Delta_mass to unimod_id: "M[+15.995]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
+  \item Delta_mass to unimodId: "M[+15.995]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
   \item Unimod_id to name: "M[UNIMOD:35]PEPTIDE" -> "M[Oxidation]PEPTIDE"
-  \item Unimod_id to delta_mass: "M[UNIMOD:35]PEPTIDE" -> "M[+15.994915]PEPTIDE"
+  \item Unimod_id to deltaMass: "M[UNIMOD:35]PEPTIDE" -> "M[+15.994915]PEPTIDE"
 }
 }
 \examples{
 # Convert sequence from name to delta mass
-convertAnnotation("M[Oxidation]PEPTIDE", convert_to = "delta_mass")
+convertAnnotation("M[Oxidation]PEPTIDE", convertToStyle = "deltaMass")
 # Result: "M[+15.994915]PEPTIDE"
 
 # Name to Unimod ID
-convertAnnotation("M[Oxidation]PEPTIDE", convert_to = "unimod_id")
+convertAnnotation("M[Oxidation]PEPTIDE", convertToStyle = "unimodId")
 # Result: "M[UNIMOD:35]PEPTIDE"
 
 # Delta mass to name
-convertAnnotation("M[+15.995]PEPTIDE", convert_to = "name")
+convertAnnotation("M[+15.995]PEPTIDE", convertToStyle = "name")
 # Result: "M[Oxidation]PEPTIDE"
 
 # Multiple modifications
-convertAnnotation("M[Oxidation]EVNES[Phospho]PEK", convert_to = "delta_mass")
+convertAnnotation("M[Oxidation]EVNES[Phospho]PEK", convertToStyle = "deltaMass")
 # Result: "M[+15.994915]EVNES[+79.966331]PEK"
 
 # Convert multiple sequences from name to delta mass
 sequences <- c("M[Oxidation]PEPTIDE", "EVNES[Phospho]PEK", "PEPTIDE")
-convertAnnotation(sequences, convert_to = "delta_mass")
+convertAnnotation(sequences, convertToStyle = "deltaMass")
 # Result: c("M[+15.994915]PEPTIDE", "EVNES[+79.966331]PEK", "PEPTIDE")
 
 # Convert from delta mass to name
 sequences <- c("M[+15.995]PEPTIDE", "S[+79.966]EQUENCE")
-convertAnnotation(sequences, convert_to = "name")
+convertAnnotation(sequences, convertToStyle = "name")
 # Result: c("M[Oxidation]PEPTIDE", "S[Phospho]EQUENCE")
 
 # Convert to Unimod IDs
 sequences <- c("M[Oxidation]PEPTIDE", "C[Carbamidomethyl]PEPTIDE")
-convertAnnotation(sequences, convert_to = "unimod_id")
+convertAnnotation(sequences, convertToStyle = "unimodId")
 # Result: c("M[UNIMOD:35]PEPTIDE", "C[UNIMOD:4]PEPTIDE")
 
 }

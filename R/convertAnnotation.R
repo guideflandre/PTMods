@@ -1,21 +1,22 @@
 #' @name convertAnnotation
 #' 
-#' @aliases convertAnnotation .convertAnnotation convertStyle unimodStyle
+#' @aliases convertAnnotation .convertAnnotation 
 #'
 #' @title Convert sequences from one annotation style to another
 #'
 #' @description
 #' Converts modifications between different annotation formats for multiple 
 #' sequences at once. See the details and examples sections for more information.
-#' The annotation styles are inferred from the `modifications` dataframe. 
+#' The annotation styles are inferred from the `modifications` dataframe (see 
+#' `?modifications`). 
 #'
 #' @param x Character vector with peptide sequences in ProForma format
 #'
-#' @param convert_to Character string specifying target format. Options:
-#'   "delta_mass", "unimod_id", "name"
+#' @param convertToStyle Character string specifying target format. Options:
+#'   "deltaMass", "unimodId", "name"
 #'
-#' @param mass_tolerance Numeric mass tolerance in Daltons for matching 
-#'   modifications (default: 0.01). Used when converting from delta_mass.
+#' @param massTolerance Numeric mass tolerance in Daltons for matching 
+#'   modifications (default: 0.01). Used when converting from deltaMass.
 #'
 #' @return Character vector with the sequences in the target annotation format
 #'
@@ -24,63 +25,63 @@
 #' @details
 #' The function handles three main conversion scenarios:
 #' \itemize{
-#'   \item Name to delta_mass: "M[Oxidation]PEPTIDE" -> "M[+15.994915]PEPTIDE"
-#'   \item Name to unimod_id: "M[Oxidation]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
+#'   \item Name to deltaMass: "M[Oxidation]PEPTIDE" -> "M[+15.994915]PEPTIDE"
+#'   \item Name to unimodId: "M[Oxidation]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
 #'   \item Delta_mass to name: "M[+15.995]PEPTIDE" -> "M[Oxidation]PEPTIDE"
-#'   \item Delta_mass to unimod_id: "M[+15.995]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
+#'   \item Delta_mass to unimodId: "M[+15.995]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
 #'   \item Unimod_id to name: "M[UNIMOD:35]PEPTIDE" -> "M[Oxidation]PEPTIDE"
-#'   \item Unimod_id to delta_mass: "M[UNIMOD:35]PEPTIDE" -> "M[+15.994915]PEPTIDE"
+#'   \item Unimod_id to deltaMass: "M[UNIMOD:35]PEPTIDE" -> "M[+15.994915]PEPTIDE"
 #' }
 #' 
 #' @examples
 #' # Convert sequence from name to delta mass
-#' convertAnnotation("M[Oxidation]PEPTIDE", convert_to = "delta_mass")
+#' convertAnnotation("M[Oxidation]PEPTIDE", convertToStyle = "deltaMass")
 #' # Result: "M[+15.994915]PEPTIDE"
 #' 
 #' # Name to Unimod ID
-#' convertAnnotation("M[Oxidation]PEPTIDE", convert_to = "unimod_id")
+#' convertAnnotation("M[Oxidation]PEPTIDE", convertToStyle = "unimodId")
 #' # Result: "M[UNIMOD:35]PEPTIDE"
 #' 
 #' # Delta mass to name
-#' convertAnnotation("M[+15.995]PEPTIDE", convert_to = "name")
+#' convertAnnotation("M[+15.995]PEPTIDE", convertToStyle = "name")
 #' # Result: "M[Oxidation]PEPTIDE"
 #' 
 #' # Multiple modifications
-#' convertAnnotation("M[Oxidation]EVNES[Phospho]PEK", convert_to = "delta_mass")
+#' convertAnnotation("M[Oxidation]EVNES[Phospho]PEK", convertToStyle = "deltaMass")
 #' # Result: "M[+15.994915]EVNES[+79.966331]PEK"
 #' 
 #' # Convert multiple sequences from name to delta mass
 #' sequences <- c("M[Oxidation]PEPTIDE", "EVNES[Phospho]PEK", "PEPTIDE")
-#' convertAnnotation(sequences, convert_to = "delta_mass")
+#' convertAnnotation(sequences, convertToStyle = "deltaMass")
 #' # Result: c("M[+15.994915]PEPTIDE", "EVNES[+79.966331]PEK", "PEPTIDE")
 #' 
 #' # Convert from delta mass to name
 #' sequences <- c("M[+15.995]PEPTIDE", "S[+79.966]EQUENCE")
-#' convertAnnotation(sequences, convert_to = "name")
+#' convertAnnotation(sequences, convertToStyle = "name")
 #' # Result: c("M[Oxidation]PEPTIDE", "S[Phospho]EQUENCE")
 #' 
 #' # Convert to Unimod IDs
 #' sequences <- c("M[Oxidation]PEPTIDE", "C[Carbamidomethyl]PEPTIDE")
-#' convertAnnotation(sequences, convert_to = "unimod_id")
+#' convertAnnotation(sequences, convertToStyle = "unimodId")
 #' # Result: c("M[UNIMOD:35]PEPTIDE", "C[UNIMOD:4]PEPTIDE")
 #'
 #' @export
 convertAnnotation <- function(x, 
-                              convert_to = c("delta_mass", "unimod_id", "name"),
-                              mass_tolerance = 0.01) {
+                              convertToStyle = c("deltaMass", "unimodId", "name"),
+                              massTolerance = 0.01) {
     
     # Validate inputs
     if (!is.character(x)) {
         stop("x must be a character vector")
     }
     
-    convert_to <- match.arg(convert_to)
+    convertToStyle <- match.arg(convertToStyle)
     
     # Apply .convertAnnotation to each element
     vapply(x, 
            function(seq) .convertAnnotation(seq, 
-                                           convert_to = convert_to, 
-                                           mass_tolerance = mass_tolerance),
+                                           convertToStyle = convertToStyle, 
+                                           massTolerance = massTolerance),
            character(1),
            USE.NAMES = FALSE)
 }
@@ -90,19 +91,19 @@ convertAnnotation <- function(x,
 #' 
 #' @noRd
 .convertAnnotation <- function(x, 
-                              convert_to = c("delta_mass", "unimod_id", "name"),
-                              mass_tolerance = 0.01) {
+                              convertToStyle = c("deltaMass", "unimodId", "name"),
+                              massTolerance = 0.01) {
     
     if (!is.character(x) || length(x) != 1L) {
         stop("x must be a single character string")
     }
     
-    convert_to <- match.arg(convert_to)
+    convertToStyle <- match.arg(convertToStyle)
     
     # Get Unimod data - simplified without priority rules
-    unimod_data <- modifications[!modifications$NeutralLoss, 
+    unimodData <- modifications[!modifications$NeutralLoss, 
                                          c("UnimodId", "Name", "MonoMass")]
-    unimod_data <- unimod_data[!duplicated(unimod_data$Name), ]
+    unimodData <- unimodData[!duplicated(unimodData$Name), ]
     
     # Find all modifications in the sequence
     # Pattern matches: [content] where content is not empty
@@ -118,28 +119,28 @@ convertAnnotation <- function(x,
     }
     
     # Extract content within brackets
-    mod_contents <- gsub("\\[|\\]", "", mod_strings)
+    modContents <- gsub("\\[|\\]", "", mod_strings)
     
     # Convert each modification
     result <- x
-    for (i in seq_along(mod_contents)) {
-        mod_content <- mod_contents[i]
+    for (i in seq_along(modContents)) {
+        modContent <- modContents[i]
         
         # Determine the input type
-        input_type <- .detectModificationType(mod_content)
+        inputType <- .detectModificationType(modContent)
         
         # Skip if already in target format
-        if (input_type == convert_to) {
+        if (inputType == convertToStyle) {
             next
         }
         
         # Perform conversion
         converted <- .convertModificationFormat(
-            mod_content = mod_content,
-            input_type = input_type,
-            output_type = convert_to,
-            unimod_data = unimod_data,
-            mass_tolerance = mass_tolerance
+            modContent = modContent,
+            inputType = inputType,
+            outputType = convertToStyle,
+            unimodData = unimodData,
+            massTolerance = massTolerance
         )
         
         # Replace in the result string if conversion successful
@@ -161,16 +162,16 @@ convertAnnotation <- function(x,
 #'
 #' @param mod_string Character string with modification (without brackets)
 #'
-#' @return Character string: "name", "delta_mass", or "unimod_id"
+#' @return Character string: "name", "deltaMass", or "unimodId"
 #'
 #' @examples
 #' # Detect Unimod ID format
 #' .detectModificationType("UNIMOD:35")
-#' # Result: "unimod_id"
+#' # Result: "unimodId"
 #' 
 #' # Detect delta mass format
 #' .detectModificationType("+15.995")
-#' # Result: "delta_mass"
+#' # Result: "deltaMass"
 #' 
 #' # Detect name format
 #' .detectModificationType("Oxidation")
@@ -180,12 +181,12 @@ convertAnnotation <- function(x,
 .detectModificationType <- function(mod_string) {
     # Check for Unimod ID (i.e. UNIMOD:35 or U:35)
     if (grepl("^(UNIMOD|U):[0-9]+$", mod_string, ignore.case = TRUE)) {
-        return("unimod_id")
+        return("unimodId")
     }
     
     # Check for mass shift (+15.995 or -17.026)
     if (grepl("^[+-][0-9]+(\\.[0-9]+)?$", mod_string)) {
-        return("delta_mass")
+        return("deltaMass")
     }
     
     # Otherwise assume it's a name
@@ -198,78 +199,79 @@ convertAnnotation <- function(x,
 #' Converts a single modification between different annotation formats using
 #' the Unimod database.
 #'
-#' @param mod_content Character string with modification content (without brackets)
+#' @param modContent Character string with modification content (without brackets)
 #'
-#' @param input_type Character string: "name", "delta_mass", or "unimod_id"
+#' @param inputType Character string: "name", "deltaMass", or "unimodId"
 #'
-#' @param output_type Character string: "name", "delta_mass", or "unimod_id"
+#' @param outputType Character string: "name", "deltaMass", or "unimodId"
 #'
-#' @param unimod_data Data.frame with Unimod data
+#' @param unimodData Data.frame with Unimod data
 #'
-#' @param mass_tolerance Numeric mass tolerance in Daltons
+#' @param massTolerance Numeric mass tolerance in Daltons
 #'
 #' @return Character string with converted modification, or NULL if conversion failed
 #'
 #' @examples
 #' # Load Unimod data
-#' unimod_data <- unimod::modifications[!unimod::modifications$NeutralLoss, 
+#' unimodData <- unimod::modifications[!unimod::modifications$NeutralLoss, 
 #'                                      c("UnimodId", "Name", "MonoMass")]
-#' unimod_data <- unimod_data[!duplicated(unimod_data$Name), ]
+#' unimodData <- unimodData[!duplicated(unimodData$Name), ]
 #' 
 #' # Convert from name to delta mass
-#' .convertModificationFormat("Oxidation", "name", "delta_mass", 
-#'                           unimod_data, 0.01)
+#' .convertModificationFormat("Oxidation", "name", "deltaMass", 
+#'                           unimodData, 0.01)
 #' # Result: "+15.994915"
 #' 
 #' # Convert from delta mass to name
-#' .convertModificationFormat("+15.995", "delta_mass", "name", 
-#'                           unimod_data, 0.01)
+#' .convertModificationFormat("+15.995", "deltaMass", "name", 
+#'                           unimodData, 0.01)
 #' # Result: "Oxidation"
 #'
 #' @noRd
-.convertModificationFormat <- function(mod_content, input_type, output_type, 
-                                       unimod_data, mass_tolerance) {
+.convertModificationFormat <- function(modContent, inputType, outputType, 
+                                       unimodData, massTolerance) {
     
     # Strategy: always convert to intermediate representation first
-    # input_type → intermediate (UnimodId + Mass + Name) → output_type
+    # inputType → intermediate (UnimodId + Mass + Name) → outputType
     
     intermediate <- NULL
     
     # Step 1: Convert input to intermediate representation
-    if (input_type == "name") {
+    if (inputType == "name") {
         # Look up by name
-        intermediate <- .lookupByName(mod_content, unimod_data)
+        intermediate <- .lookupByName(modContent, unimodData)
         
-    } else if (input_type == "delta_mass") {
+    } else if (inputType == "deltaMass") {
         # Extract mass value
-        mass_value <- as.numeric(mod_content)
+        mass_value <- as.numeric(modContent)
         # Look up by mass
-        intermediate <- .lookupByMass(mass_value, unimod_data, mass_tolerance)
+        intermediate <- .lookupByMass(mass_value, unimodData, massTolerance)
         
-    } else if (input_type == "unimod_id") {
+    } else if (inputType == "unimodId") {
         # Extract Unimod ID
-        unimod_id <- .extractUnimodId(mod_content)
+        unimodId <- .extractUnimodId(modContent)
         # Look up by ID
-        intermediate <- .lookupByUnimodId(unimod_id, unimod_data)
+        intermediate <- .lookupByUnimodId(unimodId, unimodData)
     }
     
     # Check if lookup was successful
     if (is.null(intermediate)) {
         warning(paste0(
-            "Could not find Unimod entry for modification ", mod_content))
+            "Could not find Unimod entry for modification ", 
+            modContent, ", see `?modifications`"))
         return(NULL)
     }
     
     # Step 2: Convert intermediate to output format
-    if (output_type == "name") {
+    if (outputType == "name") {
         return(intermediate$name)
         
-    } else if (output_type == "delta_mass") {
+    } else if (outputType == "deltaMass") {
         # Format mass with appropriate precision (by default 6 decimals)
         return(.formatMass(intermediate$mass))
         
-    } else if (output_type == "unimod_id") {
-        return(paste0("UNIMOD:", intermediate$unimod_id))
+    } else if (outputType == "unimodId") {
+        return(paste0("UNIMOD:", intermediate$unimodId))
     }
     
     return(NULL)
@@ -282,28 +284,28 @@ convertAnnotation <- function(x,
 #'
 #' @param name Character string with modification name
 #'
-#' @param unimod_data Data.frame with Unimod data
+#' @param unimodData Data.frame with Unimod data
 #'
-#' @return List with unimod_id, name, and mass, or NULL if not found
+#' @return List with unimodId, name, and mass, or NULL if not found
 #'
 #' @examples
 #' # Load Unimod data
-#' unimod_data <- unimod::modifications[!unimod::modifications$NeutralLoss, 
+#' unimodData <- unimod::modifications[!unimod::modifications$NeutralLoss, 
 #'                                      c("UnimodId", "Name", "MonoMass")]
-#' unimod_data <- unimod_data[!duplicated(unimod_data$Name), ]
+#' unimodData <- unimodData[!duplicated(unimodData$Name), ]
 #' 
 #' # Look up by name
-#' .lookupByName("Oxidation", unimod_data)
-#' # Result: list(unimod_id = 35, name = "Oxidation", mass = 15.994915)
+#' .lookupByName("Oxidation", unimodData)
+#' # Result: list(unimodId = 35, name = "Oxidation", mass = 15.994915)
 #' 
 #' # Look up non-existent modification
-#' .lookupByName("NonExistent", unimod_data)
+#' .lookupByName("NonExistent", unimodData)
 #' # Result: NULL
 #'
 #' @noRd
-.lookupByName <- function(name, unimod_data) {
+.lookupByName <- function(name, unimodData) {
     # Match by name (exact match)
-    match_idx <- which(unimod_data$Name == name)
+    match_idx <- which(unimodData$Name == name)
     
     if (length(match_idx) == 0L) {
         return(NULL)
@@ -311,9 +313,9 @@ convertAnnotation <- function(x,
     
     # Return the first match
     list(
-        unimod_id = unimod_data$UnimodId[match_idx[1]],
-        name = unimod_data$Name[match_idx[1]],
-        mass = unimod_data$MonoMass[match_idx[1]]
+        unimodId = unimodData$UnimodId[match_idx[1]],
+        name = unimodData$Name[match_idx[1]],
+        mass = unimodData$MonoMass[match_idx[1]]
     )
 }
 
@@ -324,30 +326,30 @@ convertAnnotation <- function(x,
 #'
 #' @param mass Numeric mass value
 #'
-#' @param unimod_data Data.frame with Unimod data
+#' @param unimodData Data.frame with Unimod data
 #'
 #' @param tolerance Numeric mass tolerance in Daltons
 #'
-#' @return List with unimod_id, name, and mass, or NULL if not found
+#' @return List with unimodId, name, and mass, or NULL if not found
 #'
 #' @examples
 #' # Load Unimod data
-#' unimod_data <- unimod::modifications[!unimod::modifications$NeutralLoss, 
+#' unimodData <- unimod::modifications[!unimod::modifications$NeutralLoss, 
 #'                                      c("UnimodId", "Name", "MonoMass")]
-#' unimod_data <- unimod_data[!duplicated(unimod_data$Name), ]
+#' unimodData <- unimodData[!duplicated(unimodData$Name), ]
 #' 
 #' # Look up by mass with tolerance
-#' .lookupByMass(15.995, unimod_data, 0.01)
-#' # Result: list(unimod_id = 35, name = "Oxidation", mass = 15.994915)
+#' .lookupByMass(15.995, unimodData, 0.01)
+#' # Result: list(unimodId = 35, name = "Oxidation", mass = 15.994915)
 #' 
 #' # Look up with no match
-#' .lookupByMass(999.999, unimod_data, 0.01)
+#' .lookupByMass(999.999, unimodData, 0.01)
 #' # Result: NULL
 #'
 #' @noRd
-.lookupByMass <- function(mass, unimod_data, tolerance) {
+.lookupByMass <- function(mass, unimodData, tolerance) {
     # Match by mass within tolerance
-    mass_diff <- abs(unimod_data$MonoMass - mass)
+    mass_diff <- abs(unimodData$MonoMass - mass)
     match_idx <- which(mass_diff <= tolerance)
     
     if (length(match_idx) == 0L) {
@@ -362,9 +364,9 @@ convertAnnotation <- function(x,
     
     # Return the best match
     list(
-        unimod_id = unimod_data$UnimodId[match_idx[1]],
-        name = unimod_data$Name[match_idx[1]],
-        mass = unimod_data$MonoMass[match_idx[1]]
+        unimodId = unimodData$UnimodId[match_idx[1]],
+        name = unimodData$Name[match_idx[1]],
+        mass = unimodData$MonoMass[match_idx[1]]
     )
 }
 
@@ -373,30 +375,30 @@ convertAnnotation <- function(x,
 #'
 #' Finds a modification in the Unimod database by its Unimod ID.
 #'
-#' @param unimod_id Numeric Unimod ID
+#' @param unimodId Numeric Unimod ID
 #'
-#' @param unimod_data Data.frame with Unimod data
+#' @param unimodData Data.frame with Unimod data
 #'
-#' @return List with unimod_id, name, and mass, or NULL if not found
+#' @return List with unimodId, name, and mass, or NULL if not found
 #'
 #' @examples
 #' # Load Unimod data
-#' unimod_data <- unimod::modifications[!unimod::modifications$NeutralLoss, 
+#' unimodData <- unimod::modifications[!unimod::modifications$NeutralLoss, 
 #'                                      c("UnimodId", "Name", "MonoMass")]
-#' unimod_data <- unimod_data[!duplicated(unimod_data$Name), ]
+#' unimodData <- unimodData[!duplicated(unimodData$Name), ]
 #' 
 #' # Look up by Unimod ID
-#' .lookupByUnimodId(35, unimod_data)
-#' # Result: list(unimod_id = 35, name = "Oxidation", mass = 15.994915)
+#' .lookupByUnimodId(35, unimodData)
+#' # Result: list(unimodId = 35, name = "Oxidation", mass = 15.994915)
 #' 
 #' # Look up non-existent ID
-#' .lookupByUnimodId(99999, unimod_data)
+#' .lookupByUnimodId(99999, unimodData)
 #' # Result: NULL
 #'
 #' @noRd
-.lookupByUnimodId <- function(unimod_id, unimod_data) {
+.lookupByUnimodId <- function(unimodId, unimodData) {
     # Match by UnimodId
-    match_idx <- which(unimod_data$UnimodId == unimod_id)
+    match_idx <- which(unimodData$UnimodId == unimodId)
     
     if (length(match_idx) == 0L) {
         return(NULL)
@@ -404,9 +406,9 @@ convertAnnotation <- function(x,
     
     # Return the match
     list(
-        unimod_id = unimod_data$UnimodId[match_idx[1]],
-        name = unimod_data$Name[match_idx[1]],
-        mass = unimod_data$MonoMass[match_idx[1]]
+        unimodId = unimodData$UnimodId[match_idx[1]],
+        name = unimodData$Name[match_idx[1]],
+        mass = unimodData$MonoMass[match_idx[1]]
     )
 }
 
