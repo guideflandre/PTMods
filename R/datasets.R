@@ -10,7 +10,10 @@
     elements <- .elements(xml)
     aminoacids <- .aminoacids(xml)
     modifications <- .modifications(xml)
-
+    attr(modifications, "Created") <-
+        attr(elements, "Created") <-
+        attr(aminoacids, "Created") <-
+        date()
     save(elements, file=file.path(path, "elements.RData"),
          compress="xz")
     save(aminoacids, file=file.path(path, "aminoacids.RData"),
