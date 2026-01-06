@@ -4,7 +4,7 @@ output:
     BiocStyle::html_document:
         toc_float: true
 vignette: >
-    %\VignetteIndexEntry{Description and usage of Spectra object}
+    %\VignetteIndexEntry{The PTMods package}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
     %\VignettePackage{PTMods}
@@ -23,10 +23,10 @@ BiocStyle::markdown()
 # Introduction
 
 Post-translational modifications (PTMs) are covalent modifications
-that happened after protein biosynthesis that can have a major
+that happen after protein biosynthesis and that can have a major
 influence on protein function. PTMs are biologically very important
 and can be identified in a high-throughput way using
-mass-spectrometry.
+mass spectrometry.
 
 The `PTMods` package focuses on handling such PTMs and works in
 conjuction with the `r BiocStyle::Biocpkg("PSMatch")` package. It
