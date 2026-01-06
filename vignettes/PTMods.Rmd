@@ -84,6 +84,7 @@ The package provides the following objects.
   nrow(PTMods::modifications)` PTMs from the unimod database:
 
 ```{r modifications}
+data(modifications)
 head(modifications)
 ```
 
@@ -92,12 +93,14 @@ head(modifications)
 
 
 ```{r aminoacids}
+data(aminoacids)
 head(aminoacids)
 ```
 - The `elements` data.frame describing `r nrow(PTMods::elements)`
   chemical elements from the unimod database:
 
 ```{r elements}
+data(elements)
 head(elements)
 ```
 
