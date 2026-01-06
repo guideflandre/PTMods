@@ -6,47 +6,12 @@
 \alias{PTMods-package}
 \title{Managing amino acid modifications for mass spectrometry in R.}
 \description{
-An interface to the community supported database for amino
-acid/protein modifications using mass spectrometry.
-}
-\details{
-Unimod is a public domain database, distributed under a copyleft
-licence: 'a copyright notice that permits unrestricted redistribution
-and modification, provided that all copies and derivatives retain the
-same permissions.'
-
-The aim is to create a community supported, comprehensive database of
-protein modifications for mass spectrometry applications. That is,
-accurate and verifiable values, derived from elemental compositions,
-for the mass differences introduced by all types of natural and
-artificial modifications. Other important information includes any
-mass change, (neutral loss), that occurs during MS/MS analysis, and
-site specificity, (which residues are susceptible to modification and
-any constraints on the position of the modification within the protein
-or peptide).
-
-The goal is not to place this information in a biological
-context. There are already many high quality sources of biological
-information about post-translational modifications:
-
-\itemize{
- \item{RESID for post-translational modifications}
- \item{Swiss-Prot protein sequence database}
- \item{Prosite database of protein families and domains}
- \item{Glycan Database from the Consortium for Functional Glycomics}
-}
-
-Other compilations of modifications with a mass spectrometry bias:
-
-\itemize{
- \item{Delta Mass}
- \item{FindMod}
-}
+The `PTMods` package focuses on handling post-translational modifications
+(PTMs). It distributes PTMs from the Unimod database and allows to convert
+PTM annotations between multiple formats.
 }
 \references{
-Source and more details: \url{http://www.unimod.org/unimod_help.html}
-
-\url{https://github.com/RforMassSpectrometry/unimod/}
+\url{https://github.com/RforMassSpectrometry/PTMods/}
 }
 \seealso{
 Useful links:
@@ -57,16 +22,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Sebastian Gibb \email{mail@sebastiangibb.de}
+\strong{Maintainer}: Guillaume Deflandre \email{guillaume.deflandre@uclouvain.be} (\href{https://orcid.org/0009-0008-1257-2416}{ORCID})
 
 Authors:
 \itemize{
-  \item Laurent Gatto \email{laurent.gatto@uclouvain.be}
-}
-
-Other contributors:
-\itemize{
-  \item Guillaume Deflandre \email{guillaume.deflandre@uclouvain.be} (\href{https://orcid.org/0009-0008-1257-2416}{ORCID}) [contributor]
+  \item Laurent Gatto \email{laurent.gatto@uclouvain.be} (\href{https://orcid.org/0000-0002-1520-2268}{ORCID})
+  \item Sebastian Gibb \email{mail@sebastiangibb.de} (\href{https://orcid.org/0000-0001-7406-4443}{ORCID})
 }
 
 }

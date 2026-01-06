@@ -8,9 +8,9 @@ utils::globalVariables("modifications")
 #'
 #' @description
 #' Converts modifications between different annotation formats for multiple
-#' sequences at once. See the details and examples sections for more information.
-#' The annotation styles are inferred from the `modifications` dataframe (see
-#' `?modifications`).
+#' sequences at once. See the details and examples sections for more
+#' information.  The annotation styles are inferred from the `modifications`
+#' dataframe (see `?modifications`).
 #'
 #' @param x Character vector with peptide sequences in ProForma format
 #'
@@ -26,14 +26,13 @@ utils::globalVariables("modifications")
 #'
 #' @details
 #' The function handles three main conversion scenarios:
-#' \itemize{
-#'   \item Name to deltaMass: "M[Oxidation]PEPTIDE" -> "M[+15.994915]PEPTIDE"
-#'   \item Name to unimodId: "M[Oxidation]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
-#'   \item Delta_mass to name: "M[+15.995]PEPTIDE" -> "M[Oxidation]PEPTIDE"
-#'   \item Delta_mass to unimodId: "M[+15.995]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
-#'   \item Unimod_id to name: "M[UNIMOD:35]PEPTIDE" -> "M[Oxidation]PEPTIDE"
-#'   \item Unimod_id to deltaMass: "M[UNIMOD:35]PEPTIDE" -> "M[+15.994915]PEPTIDE"
-#' }
+#'
+#' - Name to deltaMass: "M[Oxidation]PEPTIDE" -> "M[+15.994915]PEPTIDE"
+#' - Name to unimodId: "M[Oxidation]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
+#' - deltaMass to name: "M[+15.995]PEPTIDE" -> "M[Oxidation]PEPTIDE"
+#' - deltaMass to unimodId: "M[+15.995]PEPTIDE" -> "M[UNIMOD:35]PEPTIDE"
+#' - unimodId to name: "M[UNIMOD:35]PEPTIDE" -> "M[Oxidation]PEPTIDE"
+#' - unimodId to deltaMass: "M[UNIMOD:35]PEPTIDE" -> "M[+15.994915]PEPTIDE"
 #'
 #' @examples
 #' # Convert sequence from name to delta mass

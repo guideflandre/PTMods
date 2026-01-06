@@ -1,4 +1,8 @@
-# PTMods 0.x
+# PTMods 0.99
+
+## PTMods 0.99.0
+
+- Bump version for Bioconductor submission
 
 ## PTMods 0.3
 
