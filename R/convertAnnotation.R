@@ -99,6 +99,7 @@ convertAnnotation <- function(x,
     }
 
     convertToStyle <- match.arg(convertToStyle)
+    data(modifications, envir = environment())
 
     # Get Unimod data - simplified without priority rules
     unimodData <- modifications[!modifications$NeutralLoss,
