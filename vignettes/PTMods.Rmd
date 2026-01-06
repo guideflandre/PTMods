@@ -38,7 +38,7 @@ multiple annotation formats.
 library(PTMods)
 ```
 
-```{r loaddata, echo = FASLE}
+```{r loaddata, echo = FALSE}
 data(aminoacids)
 data(modifications)
 data(elements)
