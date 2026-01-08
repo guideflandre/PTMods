@@ -19,7 +19,7 @@ Suggests: xml2, testthat, knitr, BiocStyle
 License: GPL-3
 VignetteBuilder: knitr
 biocViews: Proteomics, MassSpectrometry
-BugReports: https://github.com/RforMassSpectrometry/unimod/issues
-URL: https://github.com/RforMassSpectrometry/unimod
+BugReports: https://github.com/RforMassSpectrometry/PTMods/issues
+URL: https://github.com/RforMassSpectrometry/PTMods
 RoxygenNote: 7.3.3
 Encoding: UTF-8
