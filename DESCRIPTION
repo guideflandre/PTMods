@@ -1,7 +1,7 @@
 Package: PTMods
 Type: Package
 Version: 0.99.0
-Title: Managing post-translational modifications in R
+Title: Managing Post-Translational Modifications in R
 Authors@R: c(person("Laurent", "Gatto", role = "aut",
                     email = "laurent.gatto@uclouvain.be",
                     comment = c(ORCID = "0000-0002-1520-2268")),
